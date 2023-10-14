@@ -26,11 +26,16 @@ def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
     # Process the cropped image here, e.g., save it or perform further analysis
     # Resize the cropped image to the target size (e.g., 256x256)
     cropped_image = cv2.resize(cropped_image, target_size)
+    # Convert the resized image to grayscale
+    cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
+    cropped_image = (cropped_image - cropped_image.min()) / (cropped_image.max() - cropped_image.min())
 
     # Close the image window
-    cv2.imshow('Cropped Image', cropped_image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    #cv2.imshow('Cropped Image', cropped_image)
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+    return cropped_image
+
 
 #
 # # Example usage:
