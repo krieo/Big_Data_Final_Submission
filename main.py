@@ -10,6 +10,8 @@ num_anopheles = 0
 num_culex = 0
 num_culiseta = 0
 num_japonicus_koreicus = 0
+
+# These are the seperate list that will hold the data for each of its respective classes
 list_aegypti = []
 list_albopictus = []
 list_anopheles = []
@@ -30,6 +32,8 @@ if __name__ == '__main__':
             f"Bounding Box (xtl, ytl, xbr, ybr): ({image_data.bbx_xtl}, {image_data.bbx_ytl}, {image_data.bbx_xbr}, {image_data.bbx_ybr})")
         print(f"Class Label: {image_data.class_label}")
         print()
+
+        # The below methods are used to get an image and save it to the class
         if image_data.class_label == "aegypti":
             # This loads the image and crops/resizes/greyscales it to be stored
             loaded_image = load_image(image_data.img_fName)
@@ -37,7 +41,7 @@ if __name__ == '__main__':
                 new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
                                        loaded_image)
                 image_data.image = new_image
-                #display_image(image_data.image)
+                # display_image(image_data.image)
                 num_aegypti += 1
                 list_aegypti.append(image_data)
         elif image_data.class_label == "albopictus":
@@ -47,7 +51,7 @@ if __name__ == '__main__':
                 new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
                                        loaded_image)
                 image_data.image = new_image
-                #display_image(image_data.image)
+                # display_image(image_data.image)
                 num_albopictus += 1
                 list_albopictus.append(image_data)
         elif image_data.class_label == "anopheles":
@@ -57,7 +61,7 @@ if __name__ == '__main__':
                 new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
                                        loaded_image)
                 image_data.image = new_image
-                #display_image(image_data.image)
+                # display_image(image_data.image)
                 num_anopheles += 1
                 list_anopheles.append(image_data)
         elif image_data.class_label == "culex":
@@ -67,7 +71,7 @@ if __name__ == '__main__':
                 new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
                                        loaded_image)
                 image_data.image = new_image
-                #display_image(image_data.image)
+                # display_image(image_data.image)
                 num_culex += 1
                 list_culex.append(image_data)
         elif image_data.class_label == "culiseta":
@@ -77,7 +81,7 @@ if __name__ == '__main__':
                 new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
                                        loaded_image)
                 image_data.image = new_image
-                #display_image(image_data.image)
+                # display_image(image_data.image)
                 num_culiseta += 1
                 list_culiseta.append(image_data)
         else:
@@ -91,6 +95,7 @@ if __name__ == '__main__':
                 num_japonicus_koreicus += 1
                 list_japonicus_koreicus.append(image_data)
 
+# This is just used to print some information to the screen
 print(num_aegypti)
 print(num_albopictus)
 print(num_anopheles)

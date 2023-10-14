@@ -1,6 +1,12 @@
 import cv2
 import os
 
+"""
+this method is used to load the image from the file
+all it needs is the file name however the folder where the files
+are located needs to be in the project directory
+"""
+
 
 def load_image(image_filename):
     image_filename = "phase2_train_v0//final//" + image_filename
@@ -20,6 +26,13 @@ def load_image(image_filename):
         return None
 
 
+"""
+This method is used to crop the image so only the mosquitoe is returned using the bounding box 
+from the csv file as reference, it also resizes the image, grey scales and normalizes it before
+returning it
+"""
+
+
 def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
     cropped_image = image[y1:y2, x1:x2]
 
@@ -31,10 +44,15 @@ def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
     cropped_image = (cropped_image - cropped_image.min()) / (cropped_image.max() - cropped_image.min())
 
     # Close the image window
-    #cv2.imshow('Cropped Image', cropped_image)
-    #cv2.waitKey(0)
-    #cv2.destroyAllWindows()
+    # cv2.imshow('Cropped Image', cropped_image)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     return cropped_image
+
+
+"""
+This method is used to display an image
+"""
 
 
 def display_image(cropped_image):
@@ -42,7 +60,6 @@ def display_image(cropped_image):
     cv2.imshow('Cropped Image', cropped_image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
 
 #
 # # Example usage:
