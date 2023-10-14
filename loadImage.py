@@ -27,3 +27,12 @@ if loaded_image is not None:
     cv2.imshow('Loaded Image', loaded_image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+    # Define the coordinates of the rectangle (x1, y1, x2, y2)
+    x1, y1, x2, y2 = 1301, 1546, 1641, 2096
+
+    # Crop the region from the original image
+    cropped_image = loaded_image[y1:y2, x1:x2]
+    # Display the cropped image (optional)
+    cv2.imshow('Cropped Image', cropped_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

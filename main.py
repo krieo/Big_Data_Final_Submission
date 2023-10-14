@@ -1,4 +1,7 @@
+import cv2
+
 import fileHandler
+from loadImage import load_image
 
 # These are the variables to count how many instances there are
 num_aegypti = 0
@@ -18,7 +21,7 @@ if __name__ == '__main__':
     file_path = "phase2_train_v0.csv"
     image_data_list = fileHandler.read_csv_file(file_path)
     # This reads the data from the file and prints it to the screen
-    for i, image_data in enumerate(image_data_list):
+    for i, image_data in enumerate(image_data_list[:10]):
         print(f"Image {i + 1}: ")
         print(f"File Name: {image_data.img_fName}")
         print(f"Width: {image_data.img_w}")
@@ -30,6 +33,14 @@ if __name__ == '__main__':
         if image_data.class_label == "aegypti":
             num_aegypti += 1
             list_aegypti.append(image_data)
+            # Example usage:
+            loaded_image = load_image(image_data.img_fName)
+
+            if loaded_image is not None:
+                # You can work with the loaded image here
+                cv2.imshow('Loaded Image', loaded_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
         elif image_data.class_label == "albopictus":
             num_albopictus += 1
             list_albopictus.append(image_data)
