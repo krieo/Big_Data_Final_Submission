@@ -20,10 +20,12 @@ def load_image(image_filename):
         return None
 
 
-def crop_image(x1, x2, y1, y2, image):
+def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
     cropped_image = image[y1:y2, x1:x2]
 
     # Process the cropped image here, e.g., save it or perform further analysis
+    # Resize the cropped image to the target size (e.g., 256x256)
+    cropped_image = cv2.resize(cropped_image, target_size)
 
     # Close the image window
     cv2.imshow('Cropped Image', cropped_image)
