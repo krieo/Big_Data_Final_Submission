@@ -1,7 +1,7 @@
 import cv2
 
 import fileHandler
-from loadImage import load_image, crop_image
+from loadImage import *
 
 # These are the variables to count how many instances there are
 num_aegypti = 0
@@ -36,12 +36,13 @@ if __name__ == '__main__':
         elif image_data.class_label == "albopictus":
             num_albopictus += 1
             list_albopictus.append(image_data)
-
             # This loads the image and crops it to be stored
             loaded_image = load_image(image_data.img_fName)
-
             if loaded_image is not None:
-                crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr, loaded_image)
+                new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
+                                       loaded_image)
+                image_data.image = new_image
+                #display_image(image_data.image)
         elif image_data.class_label == "anopheles":
             num_anopheles += 1
             list_anopheles.append(image_data)

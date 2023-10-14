@@ -37,6 +37,13 @@ def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
     return cropped_image
 
 
+def display_image(cropped_image):
+    # Close the image window
+    cv2.imshow('Cropped Image', cropped_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
 #
 # # Example usage:
 # image_filename = 'phase2_train_v0//final//train_00000.jpeg'  # Just the file name
