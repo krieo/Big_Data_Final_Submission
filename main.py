@@ -20,7 +20,7 @@ list_japonicus_koreicus = []
 if __name__ == '__main__':
     file_path = "phase2_train_v0.csv"
     image_data_list = fileHandler.read_csv_file(file_path)
-    # This reads the data from the file and prints it to the screen
+    # This reads the data from the file and stores it to a class which is then stored in a list
     for i, image_data in enumerate(image_data_list[:10]):
         print(f"Image {i + 1}: ")
         print(f"File Name: {image_data.img_fName}")
@@ -31,30 +31,65 @@ if __name__ == '__main__':
         print(f"Class Label: {image_data.class_label}")
         print()
         if image_data.class_label == "aegypti":
-            num_aegypti += 1
-            list_aegypti.append(image_data)
-        elif image_data.class_label == "albopictus":
-            num_albopictus += 1
-            list_albopictus.append(image_data)
-            # This loads the image and crops it to be stored
+            # This loads the image and crops/resizes/greyscales it to be stored
             loaded_image = load_image(image_data.img_fName)
             if loaded_image is not None:
                 new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
                                        loaded_image)
                 image_data.image = new_image
                 #display_image(image_data.image)
+                num_aegypti += 1
+                list_aegypti.append(image_data)
+        elif image_data.class_label == "albopictus":
+            # This loads the image and crops/resizes/greyscales it to be stored
+            loaded_image = load_image(image_data.img_fName)
+            if loaded_image is not None:
+                new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
+                                       loaded_image)
+                image_data.image = new_image
+                #display_image(image_data.image)
+                num_albopictus += 1
+                list_albopictus.append(image_data)
         elif image_data.class_label == "anopheles":
-            num_anopheles += 1
-            list_anopheles.append(image_data)
+            # This loads the image and crops/resizes/greyscales it to be stored
+            loaded_image = load_image(image_data.img_fName)
+            if loaded_image is not None:
+                new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
+                                       loaded_image)
+                image_data.image = new_image
+                #display_image(image_data.image)
+                num_anopheles += 1
+                list_anopheles.append(image_data)
         elif image_data.class_label == "culex":
-            num_culex += 1
-            list_culex.append(image_data)
+            # This loads the image and crops/resizes/greyscales it to be stored
+            loaded_image = load_image(image_data.img_fName)
+            if loaded_image is not None:
+                new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
+                                       loaded_image)
+                image_data.image = new_image
+                #display_image(image_data.image)
+                num_culex += 1
+                list_culex.append(image_data)
         elif image_data.class_label == "culiseta":
-            num_culiseta += 1
-            list_culiseta.append(image_data)
+            # This loads the image and crops/resizes/greyscales it to be stored
+            loaded_image = load_image(image_data.img_fName)
+            if loaded_image is not None:
+                new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
+                                       loaded_image)
+                image_data.image = new_image
+                #display_image(image_data.image)
+                num_culiseta += 1
+                list_culiseta.append(image_data)
         else:
-            num_japonicus_koreicus += 1
-            list_japonicus_koreicus.append(image_data)
+            # This loads the image and crops/resizes/greyscales it to be stored
+            loaded_image = load_image(image_data.img_fName)
+            if loaded_image is not None:
+                new_image = crop_image(image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl, image_data.bbx_ybr,
+                                       loaded_image)
+                image_data.image = new_image
+                # display_image(image_data.image)
+                num_japonicus_koreicus += 1
+                list_japonicus_koreicus.append(image_data)
 
 print(num_aegypti)
 print(num_albopictus)
