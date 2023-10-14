@@ -55,9 +55,9 @@ This method is used to display an image
 """
 
 
-def display_image(cropped_image):
+def display_image(cropped_image, class_label="nothing", image_name="nothing"):
     # Close the image window
-    cv2.imshow('Cropped Image', cropped_image)
+    cv2.imshow(class_label, cropped_image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
