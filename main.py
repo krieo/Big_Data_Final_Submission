@@ -1,5 +1,5 @@
 import cv2
-
+import os
 import fileHandler
 from loadImage import *
 
@@ -20,10 +20,13 @@ list_culiseta = []
 list_japonicus_koreicus = []
 
 if __name__ == '__main__':
+    #output_folder = "culex"
+    # this creates the output folder if it doesn't exist
+    #os.makedirs(output_folder, exist_ok=True)
     file_path = "phase2_train_v0.csv"
     image_data_list = fileHandler.read_csv_file(file_path)
     # This reads the data from the file and stores it to a class which is then stored in a list
-    for i, image_data in enumerate(image_data_list[:100]):
+    for i, image_data in enumerate(image_data_list[:30]):
         #print(f"Image {i + 1}: ")
         #print(f"File Name: {image_data.img_fName}")
         #print(f"Width: {image_data.img_w}")
@@ -74,6 +77,12 @@ if __name__ == '__main__':
                 #display_image(image_data.image, image_data.class_label, image_data.img_fName)
                 num_culex += 1
                 list_culex.append(image_data)
+                # Define a unique filename for the rotated image (e.g., using an identifier)
+                #rotated_filename = f"image" + str(num_culex) + ".jpeg"
+                # Define the full path to save the rotated image
+                #rotated_image_path = os.path.join(output_folder, rotated_filename)
+                # Save the rotated image, overwriting if it already exists
+                #cv2.imwrite(rotated_image_path, new_image)
         elif image_data.class_label == "culiseta":
             # This loads the image and crops/resizes/greyscales it to be stored
             loaded_image = load_image(image_data.img_fName)
@@ -139,33 +148,47 @@ print(f"The variable with the highest value is: {max_variable_name} = {max_value
 # This performs class balance for the anopheles
 if num_anopheles != 0:
     index = 0
+    #output_folder = "anopheles"
+    # this creates the output folder if it doesn't exist
+    #os.makedirs(output_folder, exist_ok=True)
     while num_anopheles < max_value:
         tempItem = list_anopheles[index]
         index += 1
         original_image = tempItem.image
+        # Define a unique filename for the rotated image (e.g., using an identifier)
+        #rotated_filename = f"image" + str(index) + str(num_anopheles) + ".jpeg"
+        # Define the full path to save the rotated image
+        #rotated_image_path = os.path.join(output_folder, rotated_filename)
+        # Save the rotated image, overwriting if it already exists
+        #cv2.imwrite(rotated_image_path, original_image)
+
         rotated_image = rotate_image(tempItem.image, 90)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test", "test")
         list_anopheles.append(tempItem)
         num_anopheles += 1
+        print("anopheles " + str(num_anopheles))
         # second round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=False, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test2", "test")
         list_anopheles.append(tempItem)
         num_anopheles += 1
+        print("anopheles " + str(num_anopheles))
         # third round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=False)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test3", "test")
         list_anopheles.append(tempItem)
         num_anopheles += 1
+        print("anopheles " + str(num_anopheles))
         # fourth round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test4", "test")
         list_anopheles.append(tempItem)
         num_anopheles += 1
+        print("anopheles " + str(num_anopheles))
 
 # This performs class balance for the aegypti
 if num_aegypti != 0:
@@ -179,24 +202,28 @@ if num_aegypti != 0:
         # display_image(tempItem.image, "test", "test")
         list_aegypti.append(tempItem)
         num_aegypti += 1
+        print("aegypti " + str(num_aegypti))
         # second round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=False, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test2", "test")
         list_aegypti.append(tempItem)
         num_aegypti += 1
+        print("aegypti " + str(num_aegypti))
         # third round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=False)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test3", "test")
         list_aegypti.append(tempItem)
         num_aegypti += 1
+        print("aegypti " + str(num_aegypti))
         # fourth round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test4", "test")
         list_aegypti.append(tempItem)
         num_aegypti += 1
+        print("aegypti " + str(num_aegypti))
 
 # This performs class balance for the albopictus
 if num_albopictus != 0:
@@ -210,24 +237,28 @@ if num_albopictus != 0:
         # display_image(tempItem.image, "test", "test")
         list_albopictus.append(tempItem)
         num_albopictus += 1
+        print("albopictus " + str(num_albopictus))
         # second round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=False, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test2", "test")
         list_albopictus.append(tempItem)
         num_albopictus += 1
+        print("albopictus " + str(num_albopictus))
         # third round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=False)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test3", "test")
         list_albopictus.append(tempItem)
         num_albopictus += 1
+        print("albopictus " + str(num_albopictus))
         # fourth round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test4", "test")
         list_albopictus.append(tempItem)
         num_albopictus += 1
+        print("albopictus " + str(num_albopictus))
 
 # This performs class balance for the culex
 if num_culex != 0:
@@ -241,24 +272,28 @@ if num_culex != 0:
         # display_image(tempItem.image, "test", "test")
         list_culex.append(tempItem)
         num_culex += 1
+        print("culex " + str(num_culex))
         # second round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=False, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test2", "test")
         list_culex.append(tempItem)
         num_culex += 1
+        print("culex " + str(num_culex))
         # third round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=False)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test3", "test")
         list_culex.append(tempItem)
         num_culex += 1
+        print("culex " + str(num_culex))
         # fourth round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test4", "test")
         list_culex.append(tempItem)
         num_culex += 1
+        print("culex " + str(num_culex))
 
 # This performs class balance for the culiseta
 if num_culiseta != 0:
@@ -272,24 +307,28 @@ if num_culiseta != 0:
         # display_image(tempItem.image, "test", "test")
         list_culiseta.append(tempItem)
         num_culiseta += 1
+        print("culiseta " + str(num_culiseta))
         # second round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=False, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test2", "test")
         list_culiseta.append(tempItem)
         num_culiseta += 1
+        print("culiseta " + str(num_culiseta))
         # third round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=False)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test3", "test")
         list_culiseta.append(tempItem)
         num_culiseta += 1
+        print("culiseta " + str(num_culiseta))
         # fourth round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test4", "test")
         list_culiseta.append(tempItem)
         num_culiseta += 1
+        print("culiseta " + str(num_culiseta))
 
 # This performs class balance for the japonicus_koreicus
 if num_japonicus_koreicus != 0:
@@ -303,24 +342,28 @@ if num_japonicus_koreicus != 0:
         # display_image(tempItem.image, "test", "test")
         list_japonicus_koreicus.append(tempItem)
         num_japonicus_koreicus += 1
+        print("japonicus_koreicus " + str(num_japonicus_koreicus))
         # second round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=False, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test2", "test")
         list_japonicus_koreicus.append(tempItem)
         num_japonicus_koreicus += 1
+        print("japonicus_koreicus " + str(num_japonicus_koreicus))
         # third round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=False)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test3", "test")
         list_japonicus_koreicus.append(tempItem)
         num_japonicus_koreicus += 1
+        print("japonicus_koreicus " + str(num_japonicus_koreicus))
         # fourth round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=True, flip_vertical=True)
         tempItem.image = rotated_image
         # display_image(tempItem.image, "test4", "test")
         list_japonicus_koreicus.append(tempItem)
         num_japonicus_koreicus += 1
+        print("japonicus_koreicus " + str(num_japonicus_koreicus))
 
 print(str(num_aegypti) + " Num aegypti")
 print(str(num_albopictus) + " Num albopictus")
