@@ -26,7 +26,7 @@ if __name__ == '__main__':
     file_path = "phase2_train_v0.csv"
     image_data_list = fileHandler.read_csv_file(file_path)
     # This reads the data from the file and stores it to a class which is then stored in a list
-    for i, image_data in enumerate(image_data_list[:30]):
+    for i, image_data in enumerate(image_data_list[:200]):
         #print(f"Image {i + 1}: ")
         #print(f"File Name: {image_data.img_fName}")
         #print(f"Width: {image_data.img_w}")
