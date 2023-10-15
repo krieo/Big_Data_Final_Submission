@@ -1,14 +1,15 @@
 import cv2
 import os
 
-"""
-this method is used to load the image from the file
-all it needs is the file name however the folder where the files
-are located needs to be in the project directory
-"""
+import numpy as np
 
 
 def load_image(image_filename):
+    """
+    this method is used to load the image from the file
+    all it needs is the file name however the folder where the files
+    are located needs to be in the project directory
+    """
     image_filename = "phase2_train_v0//final//" + image_filename
     # This gets the current directory where the folder is located
     current_directory = os.path.dirname(os.path.realpath(__file__))
@@ -26,14 +27,12 @@ def load_image(image_filename):
         return None
 
 
-"""
-This method is used to crop the image so only the mosquitoe is returned using the bounding box 
-from the csv file as reference, it also resizes the image, grey scales and normalizes it before
-returning it
-"""
-
-
 def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
+    """
+    This method is used to crop the image so only the mosquitoe is returned using the bounding box
+    from the csv file as reference, it also resizes the image, grey scales and normalizes it before
+    returning it
+    """
     cropped_image = image[y1:y2, x1:x2]
 
     # Process the cropped image here, e.g., save it or perform further analysis
@@ -50,12 +49,101 @@ def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
     return cropped_image
 
 
-"""
-This method is used to display an image
-"""
+def flip_image(image, flip_horizontal=False, flip_vertical=False):
+    """
+    This flips an image horizontally, vertically, or both.
+
+    Args:
+        image: The input image to be flipped.
+        flip_horizontal: Whether to perform horizontal flipping.
+        flip_vertical: Whether to perform vertical flipping.
+
+    Returns:
+        flipped_image: The flipped image.
+    """
+    flipped_image = image.copy()
+
+    if flip_horizontal:
+        flipped_image = cv2.flip(flipped_image, 1)  # 1 for horizontal flip
+
+    if flip_vertical:
+        flipped_image = cv2.flip(flipped_image, 0)  # 0 for vertical flip
+
+    return flipped_image
+
+
+def rotate_image(image, angle_degrees):
+    """
+    This method rotates the image by the number of degrees
+
+    Args:
+        image: The input image to be rotated.
+        angle_degrees: The angle in degrees by which to rotate the image.
+
+    Returns:
+        rotated_image: The rotated image.
+    """
+    # Get the image dimensions
+    height, width = image.shape[:2]
+
+    # Calculate the rotation matrix
+    rotation_matrix = cv2.getRotationMatrix2D((width / 2, height / 2), angle_degrees, 1)
+
+    # Apply the rotation to the image
+    rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
+
+    return rotated_image
+
+
+def adjust_brightness_contrast(image, alpha, beta):
+    """
+    This adjusts the brightness and contrast of an image.
+
+    Args:
+        image: The input image.
+        alpha: Controls the contrast (1.0 for no change).
+        beta: Controls the brightness (0 for no change).
+
+    Returns:
+        adjusted_image: The image with adjusted brightness and contrast.
+    """
+    adjusted_image = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+    return adjusted_image
+
+
+def inject_noise(image, noise_type='gaussian', mean=0, std=25):
+    """
+    This method is used to inject noise into an image.
+
+    Args:
+        image: The input image.
+        noise_type: Type of noise to inject gaussian or speckle by default i am only using gaussian
+        mean: Mean value for the noise that is used
+        std: Standard deviation for the noise used in gaussian.
+
+    Returns:
+        noisy_image: The image with injected noise.
+    """
+    noisy_image = image.copy()
+
+    if noise_type == 'gaussian':
+        h, w, = noisy_image.shape
+        c = 1
+        noise = np.random.normal(mean, std, (h, w, c))
+        noisy_image = cv2.add(image, noise)
+    elif noise_type == 'speckle':
+        h, w, = noisy_image.shape
+        c = 1
+        noise = np.random.normal(mean, std, (h, w, c))
+        noisy_image += noisy_image * noise
+
+    return noisy_image
 
 
 def display_image(cropped_image, class_label="nothing", image_name="nothing"):
+    """
+    This method is used to display an image
+    """
     # Close the image window
     cv2.imshow(class_label, cropped_image)
     cv2.waitKey(0)

@@ -3,12 +3,13 @@ import cv2
 
 from ImageData import ImageData
 
-"""
-This method reads the contents of the file
-and stores it in the class and returns a list
-of the class
-"""
+
 def read_csv_file(file_path):
+    """
+    This method reads the contents of the file
+    and stores it in the class and returns a list
+    of the class
+    """
     data = []
     with open(file_path, mode="r") as file:
         csv_reader = csv.DictReader(file)

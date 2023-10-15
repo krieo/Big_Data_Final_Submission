@@ -1,4 +1,4 @@
-""""
+"""
 This class holds all of the information
 for each of the images
 """
