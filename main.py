@@ -1,5 +1,9 @@
 import cv2
 import os
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from sklearn.model_selection import train_test_split
 import fileHandler
 from loadImage import *
 
@@ -371,4 +375,14 @@ print(str(num_anopheles) + " Num anopheles")
 print(str(num_culex) + " Num culex")
 print(str(num_culiseta) + " Num culiseta")
 print(str(num_japonicus_koreicus) + " Num japonicus")
+
+# This combines all the lists into one list for data and labels
+all_data = list_aegypti + list_albopictus + list_anopheles + list_culex + list_culiseta + list_japonicus_koreicus
+
+# This combines only the image and class_label fields into the list data
+all_data = [(item.image, item.class_label) for item in all_data]
+
+# Split the data into training and testing sets (80% training, 20% testing)
+train_data, test_data = train_test_split(all_data, test_size=0.2, random_state=42)
+
 
