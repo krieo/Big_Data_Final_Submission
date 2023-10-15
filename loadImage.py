@@ -29,24 +29,37 @@ def load_image(image_filename):
 
 def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
     """
-    This method is used to crop the image so only the mosquitoe is returned using the bounding box
-    from the csv file as reference, it also resizes the image, grey scales and normalizes it before
-    returning it
+    This method is used to crop the image so only the mosquito is returned using the bounding box
+    from the CSV file as reference, it also resizes the image, grayscales and normalizes it before
+    returning it.
     """
-    cropped_image = image[y1:y2, x1:x2]
+    try:
+        # Attempt to crop the image using the first set of coordinates (x1, x2, y1, y2)
+        cropped_image = image[y1:y2, x1:x2]
 
-    # Process the cropped image here, e.g., save it or perform further analysis
-    # Resize the cropped image to the target size (e.g., 256x256)
-    cropped_image = cv2.resize(cropped_image, target_size)
-    # Convert the resized image to grayscale
-    cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-    cropped_image = (cropped_image - cropped_image.min()) / (cropped_image.max() - cropped_image.min())
+        # Process the cropped image here, e.g., save it or perform further analysis
+        # Resize the cropped image to the target size (e.g., 256x256)
+        cropped_image = cv2.resize(cropped_image, target_size)
+        # Convert the resized image to grayscale
+        cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
+        cropped_image = (cropped_image - cropped_image.min()) / (cropped_image.max() - cropped_image.min())
 
-    # Close the image window
-    # cv2.imshow('Cropped Image', cropped_image)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-    return cropped_image
+        return cropped_image
+    except Exception as e:
+        try:
+            # Attempt to crop the image using the first set of coordinates (x1, x2, y1, y2)
+            cropped_image = image[y2:y1, x2:x1]
+
+            # Process the cropped image here, e.g., save it or perform further analysis
+            # Resize the cropped image to the target size (e.g., 256x256)
+            cropped_image = cv2.resize(cropped_image, target_size)
+            # Convert the resized image to grayscale
+            cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
+            cropped_image = (cropped_image - cropped_image.min()) / (cropped_image.max() - cropped_image.min())
+
+            return cropped_image
+        except Exception as e2:
+            return image
 
 
 def flip_image(image, flip_horizontal=False, flip_vertical=False):

@@ -23,15 +23,15 @@ if __name__ == '__main__':
     file_path = "phase2_train_v0.csv"
     image_data_list = fileHandler.read_csv_file(file_path)
     # This reads the data from the file and stores it to a class which is then stored in a list
-    for i, image_data in enumerate(image_data_list[:30]):
-        print(f"Image {i + 1}: ")
-        print(f"File Name: {image_data.img_fName}")
-        print(f"Width: {image_data.img_w}")
-        print(f"Height: {image_data.img_h}")
-        print(
-            f"Bounding Box (xtl, ytl, xbr, ybr): ({image_data.bbx_xtl}, {image_data.bbx_ytl}, {image_data.bbx_xbr}, {image_data.bbx_ybr})")
-        print(f"Class Label: {image_data.class_label}")
-        print()
+    for i, image_data in enumerate(image_data_list[:100]):
+        #print(f"Image {i + 1}: ")
+        #print(f"File Name: {image_data.img_fName}")
+        #print(f"Width: {image_data.img_w}")
+        #print(f"Height: {image_data.img_h}")
+        #print(
+        #   f"Bounding Box (xtl, ytl, xbr, ybr): ({image_data.bbx_xtl}, {image_data.bbx_ytl}, {image_data.bbx_xbr}, {image_data.bbx_ybr})")
+        #print(f"Class Label: {image_data.class_label}")
+        #print()
 
         # The below methods are used to get an image and save it to the class
         if image_data.class_label == "aegypti":
