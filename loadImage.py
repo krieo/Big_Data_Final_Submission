@@ -1,6 +1,5 @@
 import cv2
 import os
-from PIL import Image
 import numpy as np
 
 
@@ -39,27 +38,14 @@ def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
 
         # Process the cropped image here, e.g., save it or perform further analysis
         # Resize the cropped image to the target size (e.g., 256x256)
-        cropped_image = cv2.resize(cropped_image, target_size)
+        #cropped_image = cv2.resize(cropped_image, target_size)
         # Convert the resized image to grayscale
-        cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-        cropped_image = (cropped_image - cropped_image.min()) / (cropped_image.max() - cropped_image.min())
+        #cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
+        #cropped_image = (cropped_image - cropped_image.min()) / (cropped_image.max() - cropped_image.min())
 
         return cropped_image
     except Exception as e:
-        try:
-            # Attempt to crop the image using the first set of coordinates (x1, x2, y1, y2)
-            cropped_image = image[y2:y1, x2:x1]
-
-            # Process the cropped image here, e.g., save it or perform further analysis
-            # Resize the cropped image to the target size (e.g., 256x256)
-            cropped_image = cv2.resize(cropped_image, target_size)
-            # Convert the resized image to grayscale
-            cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-            cropped_image = (cropped_image - cropped_image.min()) / (cropped_image.max() - cropped_image.min())
-
-            return cropped_image
-        except Exception as e2:
-            return image
+        return None
 
 
 def flip_image(image, flip_horizontal=False, flip_vertical=False):
@@ -163,19 +149,21 @@ def display_image(cropped_image, class_label="nothing", image_name="nothing"):
     cv2.destroyAllWindows()
 
 
-def preprocess_image(image_data):
-    try:
-        # Assuming image_data is a PIL Image or an image in a suitable format
-        # Resize the image to the desired size (e.g., 256x256)
-        image = image_data.resize((256, 256))
-        # Convert the image to a NumPy array
-        image_array = np.array(image)
-        # Normalize pixel values (if needed)
-        image_array = image_array / 255.0  # Normalize to [0, 1] range
-        return image_array
-    except Exception as e:
-        print(f"Error preprocessing image: {e}")
-        return None
+def preprocess_image(image):
+    if image is not None:
+        try:
+            # Resize the image to the desired size (e.g., 256x256)
+            image = cv2.resize(image, (256, 256))
+            # Convert the resized image to grayscale
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            # Normalize pixel values (if needed)
+            image = image / 255.0  # Normalize to [0, 1] range
+            return image
+        except Exception as e:
+            print(f"Error preprocessing image: {e}")
+    return None
+
+
 #
 # # Example usage:
 # image_filename = 'phase2_train_v0//final//train_00000.jpeg'  # Just the file name

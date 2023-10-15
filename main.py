@@ -3,6 +3,9 @@ import os
 import tensorflow as tf
 from tensorflow import keras
 from keras import layers
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
+from keras.optimizers import Adam
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 import fileHandler
@@ -31,7 +34,7 @@ if __name__ == '__main__':
     file_path = "phase2_train_v0.csv"
     image_data_list = fileHandler.read_csv_file(file_path)
     # This reads the data from the file and stores it to a class which is then stored in a list
-    for i, image_data in enumerate(image_data_list[:200]):
+    for i, image_data in enumerate(image_data_list):
         # print(f"Image {i + 1}: ")
         # print(f"File Name: {image_data.img_fName}")
         # print(f"Width: {image_data.img_w}")
@@ -82,12 +85,6 @@ if __name__ == '__main__':
                 # display_image(image_data.image, image_data.class_label, image_data.img_fName)
                 num_culex += 1
                 list_culex.append(image_data)
-                # Define a unique filename for the rotated image (e.g., using an identifier)
-                # rotated_filename = f"image" + str(num_culex) + ".jpeg"
-                # Define the full path to save the rotated image
-                # rotated_image_path = os.path.join(output_folder, rotated_filename)
-                # Save the rotated image, overwriting if it already exists
-                # cv2.imwrite(rotated_image_path, new_image)
         elif image_data.class_label == "culiseta":
             # This loads the image and crops/resizes/greyscales it to be stored
             loaded_image = load_image(image_data.img_fName)
@@ -161,23 +158,16 @@ if num_anopheles != 0:
         tempItem = list_anopheles[index]
         index += 1
         original_image = tempItem.image
-        # Define a unique filename for the rotated image (e.g., using an identifier)
-        # rotated_filename = f"image" + str(index) + str(num_anopheles) + ".jpeg"
-        # Define the full path to save the rotated image
-        # rotated_image_path = os.path.join(output_folder, rotated_filename)
-        # Save the rotated image, overwriting if it already exists
-        # cv2.imwrite(rotated_image_path, original_image)
-
         rotated_image = rotate_image(tempItem.image, 90)
         tempItem.image = rotated_image
-        # display_image(tempItem.image, "test", "test")
+        #display_image(tempItem.image, "test", "test")
         list_anopheles.append(tempItem)
         num_anopheles += 1
         print("anopheles " + str(num_anopheles))
         # second round of augmentation
         rotated_image = flip_image(original_image, flip_horizontal=False, flip_vertical=True)
         tempItem.image = rotated_image
-        # display_image(tempItem.image, "test2", "test")
+        #display_image(tempItem.image, "test2", "test")
         list_anopheles.append(tempItem)
         num_anopheles += 1
         print("anopheles " + str(num_anopheles))
@@ -413,11 +403,27 @@ print("\nTesting Data Class Labels:")
 for image, label in test_data:
     print(label)
 
-# Preprocess the training data
-preprocessed_train_data = [(preprocess_image(image), label) for image, label in train_data]
+# Preprocess the training data and remove entries with None images
+preprocessed_train_data = [(preprocess_image(image), label) for image, label in train_data if image is not None]
 
-# Preprocess the testing data
-preprocessed_test_data = [(preprocess_image(image), label) for image, label in test_data]
+# Count the number of data points removed during preprocessing
+num_removed_train_data = len(train_data) - len(preprocessed_train_data)
+num_train_data = len(train_data)
+num_processed_train_data = len(preprocessed_train_data)
+# Preprocess the testing data and remove entries with None images
+preprocessed_test_data = [(preprocess_image(image), label) for image, label in test_data if image is not None]
+num_test_data = len(test_data)
+num_processed_test_data = len(preprocessed_test_data)
+# Count the number of data points removed during preprocessing
+num_removed_test_data = len(test_data) - len(preprocessed_test_data)
+
+# Print the counts
+print(f"Number of training data: {num_train_data}")
+print(f"Number of training processed data: {num_processed_train_data}")
+print(f"Number of training data points removed: {num_removed_train_data}")
+print(f"Number of testing data: {num_test_data}")
+print(f"Number of testing data processed: {num_processed_test_data}")
+print(f"Number of testing data points removed: {num_removed_test_data}")
 
 # Create a LabelBinarizer
 label_binarizer = LabelBinarizer()
@@ -429,8 +435,30 @@ label_binarizer.fit([label for _, label in preprocessed_train_data])
 y_train = label_binarizer.transform([label for _, label in preprocessed_train_data])
 y_test = label_binarizer.transform([label for _, label in preprocessed_test_data])
 
+# Define and train your model (as previously shown)
+
 print("One-Hot Encoded Training Labels:")
 print(y_train)
 
 print("\nOne-Hot Encoded Testing Labels:")
 print(y_test)
+
+# Define the CNN model
+model = Sequential()
+model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(256, 256, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dense(6, activation='softmax'))  # 6 is the number of output classes
+
+# Compile the model
+model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
+
+# Train the model
+model.fit(np.array([img for img, _ in preprocessed_train_data]), y_train, epochs=10, batch_size=32, validation_data=(np.array([img for img, _ in preprocessed_test_data]), y_test))
+
+# Evaluate the model
+evaluation = model.evaluate(np.array([img for img, _ in preprocessed_test_data]), y_test)
+print("Test loss:", evaluation[0])
+print("Test accuracy:", evaluation[1])
+
