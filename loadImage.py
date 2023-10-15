@@ -26,26 +26,70 @@ def load_image(image_filename):
         return None
 
 
-def crop_image(x1, x2, y1, y2, image, target_size=(256, 256)):
+def format_image(x1, x2, y1, y2, image, target_size=(256, 256)):
     """
     This method is used to crop the image so only the mosquito is returned using the bounding box
     from the CSV file as reference, it also resizes the image, grayscales and normalizes it before
     returning it.
     """
-    try:
-        # Attempt to crop the image using the first set of coordinates (x1, x2, y1, y2)
+    # Attempt to crop the image using the first set of coordinates (x1, x2, y1, y2)
+    cropped_image = image[y1:y2, x1:x2]
+    # Convert the resized image to grayscale
+    cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
+    # Resize the image to the desired dimensions (e.g., 224x224)
+    image = cv2.resize(cropped_image, (224, 224))
+
+    # Convert the image to float32
+    image = image.astype(np.float32)
+
+    # Normalize the pixel values to [0, 1]
+    image /= 255.0
+
+    # Optionally, you can expand the dimensions to match the input shape expected by the model
+    # For example, if your model expects an input shape of (batch_size, height, width, channels)
+    image = np.expand_dims(image, axis=0)  # Adds a batch dimension
+
+    # Now, 'image' is ready to be used as input for a CNN model in TensorFlow or any other deep learning framework.
+    return cropped_image
+
+
+def crop_and_preprocess_image(image_path, x1, x2, y1, y2, target_size=(224, 224)):
+    """
+    This method is used to crop the image so only the mosquito is returned using the bounding box
+    from the CSV file as reference, it also resizes the image, grayscales, and normalizes it before
+    returning it.
+    """
+    # Load the image from the file
+    image = cv2.imread(image_path)
+
+    # Check if the loaded image is not empty
+    if image is not None and image.size != 0:
+        # Attempt to crop the image using the coordinates (x1, x2, y1, y2)
         cropped_image = image[y1:y2, x1:x2]
 
-        # Process the cropped image here, e.g., save it or perform further analysis
-        # Resize the cropped image to the target size (e.g., 256x256)
-        #cropped_image = cv2.resize(cropped_image, target_size)
-        # Convert the resized image to grayscale
-        #cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-        #cropped_image = (cropped_image - cropped_image.min()) / (cropped_image.max() - cropped_image.min())
+        # Check if the cropped image is not empty
+        if cropped_image is not None and cropped_image.size != 0:
+            # Resize the cropped image to the desired dimensions
+            cropped_image = cv2.resize(cropped_image, target_size)
 
-        return cropped_image
-    except Exception as e:
-        return None
+            # Convert the cropped image to grayscale
+            cropped_image = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
+
+            # Convert the image to float32
+            cropped_image = cropped_image.astype(np.float32)
+
+            # Normalize the pixel values to [0, 1]
+            cropped_image /= 255.0
+
+            # Optionally, you can expand the dimensions to match the input shape expected by the model
+            # For example, if your model expects an input shape of (batch_size, height, width, channels)
+            cropped_image = np.expand_dims(cropped_image, axis=0)  # Adds a batch dimension
+
+            # Now, 'cropped_image' is ready to be used as input for a CNN model.
+            return cropped_image
+
+    # If there's an issue with the image, return None or handle the error as needed
+    return None
 
 
 def flip_image(image, flip_horizontal=False, flip_vertical=False):
@@ -162,7 +206,6 @@ def preprocess_image(image):
         except Exception as e:
             print(f"Error preprocessing image: {e}")
     return None
-
 
 #
 # # Example usage:
