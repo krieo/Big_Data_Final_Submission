@@ -1,6 +1,6 @@
 import cv2
 import os
-
+from PIL import Image
 import numpy as np
 
 
@@ -162,6 +162,20 @@ def display_image(cropped_image, class_label="nothing", image_name="nothing"):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
+def preprocess_image(image_data):
+    try:
+        # Assuming image_data is a PIL Image or an image in a suitable format
+        # Resize the image to the desired size (e.g., 256x256)
+        image = image_data.resize((256, 256))
+        # Convert the image to a NumPy array
+        image_array = np.array(image)
+        # Normalize pixel values (if needed)
+        image_array = image_array / 255.0  # Normalize to [0, 1] range
+        return image_array
+    except Exception as e:
+        print(f"Error preprocessing image: {e}")
+        return None
 #
 # # Example usage:
 # image_filename = 'phase2_train_v0//final//train_00000.jpeg'  # Just the file name
