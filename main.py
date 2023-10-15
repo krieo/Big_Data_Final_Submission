@@ -105,7 +105,7 @@ X_train_shuffled = np.array(X_train_shuffled)
 y_train_shuffled = np.array(y_train_shuffled)
 
 # Display the first 5 images with their labels
-for i in range(5):
+for i in range(3):
     image = (X_train_shuffled[i][0] * 255).astype(np.uint8)  # Convert values back to 0-255 range
     label = y_train_shuffled[i]
 
