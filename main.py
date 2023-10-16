@@ -31,7 +31,7 @@ if __name__ == '__main__':
     image_data_list = fileHandler.read_csv_file(file_path)
     total_images_processed = 0
 
-    for i, image_data in enumerate(image_data_list[:10]):
+    for i, image_data in enumerate(image_data_list):
         if image_data.class_label in class_counts:
             processed_image = crop_and_preprocess_image(image_filename + image_data.img_fName,
                                                         image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl,
