@@ -31,7 +31,7 @@ if __name__ == '__main__':
     image_data_list = fileHandler.read_csv_file(file_path)
     total_images_processed = 0
 
-    for i, image_data in enumerate(image_data_list):
+    for i, image_data in enumerate(image_data_list[:10]):
         if image_data.class_label in class_counts:
             processed_image = crop_and_preprocess_image(image_filename + image_data.img_fName,
                                                         image_data.bbx_xtl, image_data.bbx_xbr, image_data.bbx_ytl,
@@ -41,7 +41,7 @@ if __name__ == '__main__':
                 # Image processing was successful, add it to the lists
                 image_data.image = processed_image
                 class_counts[image_data.class_label] += 1
-                class_lists[image_data.class_label].append(image_data)
+                #class_lists[image_data.class_label].append(image_data)
                 total_images_processed += 1
 
                 directory = f"data/{image_data.class_label}"
@@ -61,5 +61,5 @@ if __name__ == '__main__':
 
     print(f'Total images processed: {total_images_processed}')
 
-print(class_lists)
+#print(class_lists)
 

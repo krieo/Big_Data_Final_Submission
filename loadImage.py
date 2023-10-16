@@ -11,14 +11,14 @@ def crop_and_preprocess_image(image_path, x1, x2, y1, y2, target_size=(224, 224)
     """
     # Load the image from the file
     image = cv2.imread(image_path)
-    print(image.shape)
-    print(" THIS IS THE SHAPE OF THE IMAGE")
+    #print(image.shape)
+    #print(" THIS IS THE SHAPE OF THE IMAGE")
     # Check if the loaded image is not empty
     if image is not None and image.size != 0:
         # Attempt to crop the image using the coordinates (x1, x2, y1, y2)
         cropped_image = image[y1:y2, x1:x2]
-        print(cropped_image.shape)
-        print(" THIS IS THE SHAPE OF THE IMAGE cropped")
+        #print(cropped_image.shape)
+        #print(" THIS IS THE SHAPE OF THE IMAGE cropped")
         # Check if the cropped image is not empty
         return cropped_image
 
