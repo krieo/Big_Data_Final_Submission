@@ -31,7 +31,7 @@ if __name__ == '__main__':
     image_data_list = fileHandler.read_csv_file(file_path)
     total_images_processed = 0
 
-    for i, image_data in enumerate(image_data_list[10130:]):
+    for i, image_data in enumerate(image_data_list[10130:10141]):
         try:
             if image_data.class_label in class_counts:
                 processed_image = crop_and_preprocess_image(image_filename + image_data.img_fName,
@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
                 if processed_image is not None:
                     # Image processing was successful, add it to the lists
-                    image_data.image = processed_image
+                    # image_data.image = processed_image
                     class_counts[image_data.class_label] += 1
                     total_images_processed += 1
 
@@ -55,12 +55,12 @@ if __name__ == '__main__':
                     # Delete the reference to ImageData object
                     del image_data
 
-            if (i + 1) % batch_size == 0:
-                # Processed one batch, you can perform batch-specific operations here if needed
-                print(f"Processed batch {i // batch_size + 1} - Total images processed: {total_images_processed}")
         except Exception as e:
             print(f"An error occurred while processing image {i}: {e}")
-            print(image_data.img_fName)
+
+        if (i + 1) % batch_size == 0:
+            # Processed one batch, you can perform batch-specific operations here if needed
+            print(f"Processed batch {i // batch_size + 1} - Total images processed: {total_images_processed}")
 
     # Print class counts
     for class_label, count in class_counts.items():
