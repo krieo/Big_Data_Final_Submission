@@ -107,13 +107,38 @@ else:
 data = tf.keras.utils.image_dataset_from_directory('data')
 # print(data.count())
 # this allows us to access the data from the pipeline
-data_iterator = data.as_numpy_iterator()
-batch = data_iterator.next()
+# data_iterator = data.as_numpy_iterator()
+# batch = data_iterator.next()
 # batch = data_iterator.next() this command can be run multiple times to get the next batch
-# this prints a 2 which is the images and the labels
-print(len(batch))
+# this prints a 2 which is the images and the labels images are in key 0 batch[0] and labels are in key 1 batch[1]
+# print(len(batch))
 # this is the images as represented as a numpy array
-print(batch[0].shape)
+# print(batch[0].shape)
 # this is the labels for the images as normalized
-print(batch[1])
+# print(batch[1])
+# this normalises the values to a range of 0 and 1
+# scaled_batch = batch[0] / 255
+# print(scaled_batch.min())
+# print(scaled_batch.max())
+# this is a more efficient way to normalize the data as it does it when loaded in pipeline
+data = data.map(lambda x, y: (x/255, y))
+# print(data.as_numpy_iterator().next()[0].min())
 
+# split the data in training and testing sets
+# the train and validation sets will be used during training
+print(len(data))
+train_size = int(len(data)*0.7)
+val_size = int(len(data)*0.2)
+test_size = int(len(data)*0.1) + 2
+print("Sizes:")
+print(train_size)
+print(val_size)
+print(test_size)
+
+# This allows for data to be split into chucks on the size calculated earlier
+train = data.take(train_size)
+val = data.skip(train_size).take(val_size)
+test = data.skip(train_size + val_size).take(test_size)
+print(len(train))
+print(len(val))
+print(len(test))
