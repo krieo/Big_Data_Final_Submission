@@ -102,20 +102,18 @@ if boolPerformImageProcessing == True:
 else:
     print("Files do exist no processing done")
 
+# print(class_lists)
+# this builds the image data set on the fly it also does preprocessing
+data = tf.keras.utils.image_dataset_from_directory('data')
+# print(data.count())
+# this allows us to access the data from the pipeline
+data_iterator = data.as_numpy_iterator()
+batch = data_iterator.next()
+# batch = data_iterator.next() this command can be run multiple times to get the next batch
+# this prints a 2 which is the images and the labels
+print(len(batch))
+# this is the images as represented as a numpy array
+print(batch[0].shape)
+# this is the labels for the images as normalized
+print(batch[1])
 
-# #print(class_lists)
-# # this builds the image data set on the fly it also does preprocessing
-# data = tf.keras.utils.image_dataset_from_directory('data')
-# # Print some information about the dataset
-# for images, labels in data:
-#     print("Batch of images shape:", images.shape)
-#     print("Batch of labels shape:", labels.shape)
-#     print("Labels in this batch:", labels)
-#     # You can add more information as needed
-#
-# # Optionally, you can access class names and other dataset properties
-# class_names = data.class_names
-# num_classes = len(class_names)
-# print("Class names:", class_names)
-# print("Number of classes:", num_classes)
-#
