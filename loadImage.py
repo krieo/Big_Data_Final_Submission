@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 
-def crop_and_preprocess_image(image_path, x1, x2, y1, y2, target_size=(224, 224)):
+def crop_and_preprocess_image(image_path, x1, x2, y1, y2, target_size=(300, 300)):
     """
     This method is used to crop the image so only the mosquito is returned using the bounding box
     from the CSV file as reference, it also resizes the image, grayscales, and normalizes it before
@@ -20,6 +20,9 @@ def crop_and_preprocess_image(image_path, x1, x2, y1, y2, target_size=(224, 224)
         #print(cropped_image.shape)
         #print(" THIS IS THE SHAPE OF THE IMAGE cropped")
         # Check if the cropped image is not empty
+        if cropped_image is not None and cropped_image.size != 0:
+         # Resize the cropped image to the desired dimensions
+            cropped_image = cv2.resize(cropped_image, target_size)
         return cropped_image
 
 # # This is the original method
