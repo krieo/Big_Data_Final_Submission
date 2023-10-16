@@ -3,7 +3,7 @@ import fileHandler
 from loadImage import *
 import tensorflow as tf
 # Constants for batch processing
-batch_size = 30  # Change this as needed
+batch_size = 50  # Change this as needed
 
 # These are the variables to count how many instances there are
 class_counts = {
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     image_data_list = fileHandler.read_csv_file(file_path)
     total_images_processed = 0
 
-    for i, image_data in enumerate(image_data_list[10130:10141]):
+    for i, image_data in enumerate(image_data_list):
         try:
             if image_data.class_label in class_counts:
                 processed_image = crop_and_preprocess_image(image_filename + image_data.img_fName,
@@ -68,19 +68,19 @@ if __name__ == '__main__':
 
     print(f'Total images processed: {total_images_processed}')
 
-#print(class_lists)
-# this builds the image data set on the fly it also does preprocessing
-data = tf.keras.utils.image_dataset_from_directory('data')
-# Print some information about the dataset
-for images, labels in data:
-    print("Batch of images shape:", images.shape)
-    print("Batch of labels shape:", labels.shape)
-    print("Labels in this batch:", labels)
-    # You can add more information as needed
-
-# Optionally, you can access class names and other dataset properties
-class_names = data.class_names
-num_classes = len(class_names)
-print("Class names:", class_names)
-print("Number of classes:", num_classes)
-
+# #print(class_lists)
+# # this builds the image data set on the fly it also does preprocessing
+# data = tf.keras.utils.image_dataset_from_directory('data')
+# # Print some information about the dataset
+# for images, labels in data:
+#     print("Batch of images shape:", images.shape)
+#     print("Batch of labels shape:", labels.shape)
+#     print("Labels in this batch:", labels)
+#     # You can add more information as needed
+#
+# # Optionally, you can access class names and other dataset properties
+# class_names = data.class_names
+# num_classes = len(class_names)
+# print("Class names:", class_names)
+# print("Number of classes:", num_classes)
+#
