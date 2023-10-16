@@ -2,6 +2,7 @@ import os
 import fileHandler
 from loadImage import *
 import tensorflow as tf
+
 # Constants for batch processing
 batch_size = 50  # Change this as needed
 
@@ -31,7 +32,35 @@ if __name__ == '__main__':
     image_data_list = fileHandler.read_csv_file(file_path)
     total_images_processed = 0
 
-    for i, image_data in enumerate(image_data_list[10150:10160]):
+    # Directory where the subfolders are located
+    base_directory = "data"
+    boolPerformImageProcessing = False
+    # Subfolder names
+    subfolders = class_counts.keys()
+
+    for subfolder in subfolders:
+        if subfolder == "japonicus/koreicus":
+            subfolder = "japonicus_koreicus"
+        subfolder_path = os.path.join(base_directory, subfolder)
+
+        # Check if the subfolder exists
+        if os.path.exists(subfolder_path):
+            print(f"The subfolder '{subfolder}' exists.")
+
+            # Check if the subfolder contains files
+            files_in_subfolder = os.listdir(subfolder_path)
+            if files_in_subfolder:
+                print(f"The subfolder '{subfolder}' contains files.")
+            else:
+                print(f"The subfolder '{subfolder}' is empty.")
+                boolPerformImageProcessing = True
+        else:
+            print(f"The subfolder '{subfolder}' does not exist.")
+            boolPerformImageProcessing = True
+
+if boolPerformImageProcessing == True:
+
+    for i, image_data in enumerate(image_data_list):
         try:
             if image_data.class_label in class_counts:
                 processed_image = crop_and_preprocess_image(image_filename + image_data.img_fName,
@@ -70,6 +99,9 @@ if __name__ == '__main__':
         print(f'Count of {class_label}: {count}')
 
     print(f'Total images processed: {total_images_processed}')
+else:
+    print("Files do exist no processing done")
+
 
 # #print(class_lists)
 # # this builds the image data set on the fly it also does preprocessing
