@@ -128,6 +128,37 @@ class_weights = {i: total_images/num_images[class_name] for i, class_name in enu
 for class_name, weight in zip(num_images.keys(), class_weights.values()):
     print(f"Class: {class_name}, Weight: {weight}")
 
+
+# Create an ImageDataGenerator object
+datagen = ImageDataGenerator(
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    horizontal_flip=True)
+if not os.path.exists('preview'):
+    os.makedirs('preview')
+# Loop over each class
+for class_name in classes:
+    # Check if the class has less than 1500 images
+    if num_images[class_name] < 50:
+        # Get the directory of the current class
+        class_dir = os.path.join(data_dir, class_name)
+        # Get a list of all image filenames in the current class directory
+        image_list = os.listdir(class_dir)
+        # Loop over each image in the current class directory
+        for image_filename in image_list:
+            # Load the image file
+            img = tf.keras.preprocessing.image.load_img(os.path.join(class_dir, image_filename))
+            # Convert the image to an array
+            x = tf.keras.preprocessing.image.img_to_array(img)
+            # Reshape the array to (1, height, width, channels)
+            x = x.reshape((1,) + x.shape)
+            # The .flow() command generates batches of randomly transformed images and saves them to the `preview/` directory
+            i = 0
+            for batch in datagen.flow(x, batch_size=1, save_to_dir=class_dir, save_prefix=class_name, save_format='jpeg'):
+                i += 1
+                if i > 20:
+                    break  # otherwise the generator would loop indefinitely
 # this allows us to access the data from the pipeline
 # data_iterator = data.as_numpy_iterator()
 # batch = data_iterator.next()
@@ -171,14 +202,10 @@ model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(256, 256, 3)))
 model.add(MaxPooling2D())
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
-model.add(Dropout(0.5))
 model.add(Conv2D(16, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
 model.add(Flatten())
 model.add(Dense(256, activation='relu'))
-model.add(Dense(128, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(32, activation='relu'))
 model.add(Dense(6, activation='softmax'))
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
@@ -211,4 +238,4 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=mylog_dir)
 checkpoint_callback = ModelCheckpoint(model_path, save_best_only=True)
 
 # Train the model, and it will save the best model during training
-history = model.fit(train, epochs=20, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
+history = model.fit(train, epochs=35, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
