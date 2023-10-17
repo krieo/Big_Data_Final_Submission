@@ -177,8 +177,10 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 
 print(model.summary())
 # # train the model
+mylog_dir = 'logs'
+# this call back helps us save the logs or model at a previous point
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=mylog_dir)
+
 # # Train the model
-# history = model.fit(train,
-#                     epochs=10,
-#                     validation_data=val,
-#                     class_weight=class_weights)
+history = model.fit(train, epochs=10, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback])
+
