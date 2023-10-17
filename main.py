@@ -150,13 +150,13 @@ for class_name in classes:
         # The .flow() command generates batches of randomly transformed images and saves them to the `preview/` directory
         i = 0
         if num_images[class_name] < 50:
-            num_aug_images = 40
-        elif 50 <= num_images[class_name] < 100:
             num_aug_images = 30
+        elif 50 <= num_images[class_name] < 100:
+            num_aug_images = 20
         elif 100 <= num_images[class_name] < 500:
-            num_aug_images = 6
+            num_aug_images = 4
         elif 500 <= num_images[class_name] < 1000:
-            num_aug_images = 3
+            num_aug_images = 2
         else:
             continue  # Skip augmentation for this class
         for batch in datagen.flow(x, batch_size=1, save_to_dir=class_dir, save_prefix='aug', save_format='jpeg'):
@@ -231,13 +231,19 @@ test = data.skip(train_size + val_size).take(test_size)
 model = Sequential()
 model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(256, 256, 3)))
 model.add(MaxPooling2D())
-model.add(Dropout(0.25))  # Dropout layer
+model.add(Dropout(0.05))  # Dropout layer
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
-model.add(Dropout(0.25))  # Dropout layer
-model.add(Conv2D(16, (3, 3), activation='relu'))
+model.add(Dropout(0.5))  # Dropout layer
+model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
-model.add(Dropout(0.25))  # Dropout layer
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D())
+model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(MaxPooling2D())
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D())
+# model.add(Dropout(0.25))  # Dropout layer
 model.add(Flatten())
 model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))  # Dropout layer
@@ -272,4 +278,5 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=mylog_dir)
 checkpoint_callback = ModelCheckpoint(model_path, save_best_only=True)
 
 # Train the model, and it will save the best model during training
-history = model.fit(train, epochs=25, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
+# history = model.fit(train, epochs=25, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
+history = model.fit(train, epochs=25, validation_data=val, callbacks=[tensorboard_callback, checkpoint_callback])
