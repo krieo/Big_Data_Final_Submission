@@ -127,8 +127,8 @@ for class_name, weight in zip(num_images.keys(), class_weights.values()):
     print(f"Class: {class_name}, Weight: {weight}")
 
 # this allows us to access the data from the pipeline
-data_iterator = data.as_numpy_iterator()
-batch = data_iterator.next()
+# data_iterator = data.as_numpy_iterator()
+# batch = data_iterator.next()
 # batch = data_iterator.next() this command can be run multiple times to get the next batch
 # this prints a 2 which is the images and the labels images are in key 0 batch[0] and labels are in key 1 batch[1]
 # print(len(batch))
@@ -162,3 +162,23 @@ test = data.skip(train_size + val_size).take(test_size)
 # print(len(train))
 # print(len(val))
 # print(len(test))
+# the model
+model = Sequential()
+model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 3)))
+model.add(MaxPooling2D())
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D())
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D())
+model.add(Flatten())
+model.add(Dense(64, activation='relu'))
+model.add(Dense(6, activation='softmax'))
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+print(model.summary())
+# # train the model
+# # Train the model
+# history = model.fit(train,
+#                     epochs=10,
+#                     validation_data=val,
+#                     class_weight=class_weights)
