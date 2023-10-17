@@ -172,6 +172,9 @@ model.add(Dropout(0.2))  # Add a dropout layer with a dropout rate of 20%
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
 model.add(Dropout(0.2))  # Add another dropout layer
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D())
+model.add(Dropout(0.2))  # Add another dropout layer
 model.add(Conv2D(16, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
 model.add(Dropout(0.2))  # Add another dropout layer
@@ -210,4 +213,4 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=mylog_dir)
 checkpoint_callback = ModelCheckpoint(model_path, save_best_only=True)
 
 # Train the model, and it will save the best model during training
-history = model.fit(train, epochs=1, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
+history = model.fit(train, epochs=10, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
