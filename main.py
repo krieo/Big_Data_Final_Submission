@@ -161,6 +161,7 @@ print(test_size)
 train = data.take(train_size)
 val = data.skip(train_size).take(val_size)
 test = data.skip(train_size + val_size).take(test_size)
+
 # print(len(train))
 # print(len(val))
 # print(len(test))
@@ -168,19 +169,13 @@ test = data.skip(train_size + val_size).take(test_size)
 model = Sequential()
 model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(256, 256, 3)))
 model.add(MaxPooling2D())
-model.add(Dropout(0.2))  # Add a dropout layer with a dropout rate of 20%
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
-model.add(Dropout(0.2))  # Add another dropout layer
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D())
-model.add(Dropout(0.2))  # Add another dropout layer
+model.add(Dropout(0.1))
 model.add(Conv2D(16, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
-model.add(Dropout(0.2))  # Add another dropout layer
 model.add(Flatten())
-model.add(Dense(64, activation='relu'))
-model.add(Dropout(0.5))  # Add a dropout layer with a higher dropout rate before the output layer
+model.add(Dense(256, activation='relu'))
 model.add(Dense(6, activation='softmax'))
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
@@ -213,4 +208,4 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=mylog_dir)
 checkpoint_callback = ModelCheckpoint(model_path, save_best_only=True)
 
 # Train the model, and it will save the best model during training
-history = model.fit(train, epochs=10, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
+history = model.fit(train, epochs=20, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
