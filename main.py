@@ -164,11 +164,11 @@ test = data.skip(train_size + val_size).take(test_size)
 # print(len(test))
 # the model
 model = Sequential()
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(256, 256, 3)))
+model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(256, 256, 3)))
 model.add(MaxPooling2D())
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(16, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
 model.add(Flatten())
 model.add(Dense(64, activation='relu'))
@@ -182,5 +182,5 @@ mylog_dir = 'logs'
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=mylog_dir)
 
 # # Train the model
-history = model.fit(train, epochs=10, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback])
+history = model.fit(train, epochs=20, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback])
 
