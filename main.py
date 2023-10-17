@@ -2,7 +2,9 @@ import os
 import fileHandler
 from loadImage import *
 import tensorflow as tf
-
+from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
+from keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 # Constants for batch processing
 batch_size = 50  # Change this as needed
 
@@ -105,6 +107,37 @@ else:
 # print(class_lists)
 # this builds the image data set on the fly it also does preprocessing
 data = tf.keras.utils.image_dataset_from_directory('data')
+# Get class names
+# class_names = data.class_names
+# print("Class Names:", class_names)
+# Get class names
+class_names = data.class_names
+#
+# # Iterate over the class names and count the number of files for each class
+# class_counts = {class_name: 0 for class_name in class_names}
+#
+# for images, labels in data:
+#     for label in labels:
+#         class_counts[class_names[label.numpy()]] += 1
+#
+# # Print the counts for each class
+# for class_name, count in class_counts.items():
+#     print(f"Class '{class_name}': {count} files")
+
+# Define the path to your data directory
+data_dir = 'data'
+
+# Get the list of classes
+classes = os.listdir(data_dir)
+
+# Initialize a dictionary to hold the counts
+num_images = {}
+
+# Loop over each class and count the number of images
+for class_name in classes:
+    num_images[class_name] = len(os.listdir(os.path.join(data_dir, class_name)))
+
+print(num_images)
 # print(data.count())
 # this allows us to access the data from the pipeline
 # data_iterator = data.as_numpy_iterator()
@@ -134,11 +167,34 @@ print("Sizes:")
 print(train_size)
 print(val_size)
 print(test_size)
-
-# This allows for data to be split into chucks on the size calculated earlier
-train = data.take(train_size)
-val = data.skip(train_size).take(val_size)
-test = data.skip(train_size + val_size).take(test_size)
-print(len(train))
-print(len(val))
-print(len(test))
+#
+# # This allows for data to be split into chucks on the size calculated earlier
+# train = data.take(train_size)
+# val = data.skip(train_size).take(val_size)
+# test = data.skip(train_size + val_size).take(test_size)
+# print(len(train))
+# print(len(val))
+# print(len(test))
+# # deep learning model
+# model = Sequential()
+# # This adds a convolutional layer and a max pooling layer
+# # here there are 16 filters with a 3 by 3 kernel size and moves by 1 stride
+# model.add(Conv2D(16, (3, 3), 1, activation='relu', input_shape=(256, 256, 3)))
+# model.add(MaxPooling2D())
+#
+# # This adds a convolutional layer and a max pooling layer
+# model.add(Conv2D(32, (3, 3), 1, activation='relu'))
+# model.add(MaxPooling2D())
+#
+# # This adds a convolutional layer and a max pooling layer
+# model.add(Conv2D(16, (3, 3), 1, activation='relu'))
+# model.add(MaxPooling2D())
+#
+# model.add(Flatten)
+#
+# model.add(Dense(256, activation='relu'))
+# # model.add(Dense(1, activation='sigmoid'))
+# model.compile('adam', loss= tf.losses.categorical_crossentropy, metrics=['accuracy'])
+# # training
+# print(model.summary())
+#
