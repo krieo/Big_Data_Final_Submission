@@ -5,6 +5,8 @@ import tensorflow as tf
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
+from keras.callbacks import ModelCheckpoint
+from keras.models import load_model
 # Constants for batch processing
 batch_size = 50  # Change this as needed
 
@@ -166,21 +168,46 @@ test = data.skip(train_size + val_size).take(test_size)
 model = Sequential()
 model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(256, 256, 3)))
 model.add(MaxPooling2D())
+model.add(Dropout(0.2))  # Add a dropout layer with a dropout rate of 20%
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
+model.add(Dropout(0.2))  # Add another dropout layer
 model.add(Conv2D(16, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
+model.add(Dropout(0.2))  # Add another dropout layer
 model.add(Flatten())
 model.add(Dense(64, activation='relu'))
+model.add(Dropout(0.5))  # Add a dropout layer with a higher dropout rate before the output layer
 model.add(Dense(6, activation='softmax'))
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 print(model.summary())
 # # train the model
 mylog_dir = 'logs'
+# Define the folder where you want to save your models
+model_folder = "models"
+
+# Ensure the folder exists, or create it if it doesn't
+if not os.path.exists(model_folder):
+    os.makedirs(model_folder)
+
+# Define the model file path within the "models" folder
+model_filename = "my_model.h5"
+model_path = os.path.join(model_folder, model_filename)
+
+# Check if the model file exists
+if os.path.exists(model_path):
+    # Load the previously trained model
+    model = load_model(model_path)
+    print("Loaded existing model.")
+else:
+    print("Using the already created model.")
+
 # this call back helps us save the logs or model at a previous point
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=mylog_dir)
 
-# # Train the model
-history = model.fit(train, epochs=20, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback])
+# Define a checkpoint callback to save the best model
+checkpoint_callback = ModelCheckpoint(model_path, save_best_only=True)
 
+# Train the model, and it will save the best model during training
+history = model.fit(train, epochs=1, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
