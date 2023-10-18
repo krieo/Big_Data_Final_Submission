@@ -237,7 +237,7 @@ model.add(MaxPooling2D())
 model.add(Dropout(0.5))  # Dropout layer
 model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(128, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
 model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
