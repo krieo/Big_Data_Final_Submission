@@ -273,27 +273,42 @@ if os.path.exists(model_path):
 else:
     print("Using the already created model.")
 
-# this call back helps us save the logs or model at a previous point
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=mylog_dir)
 
-# Define a checkpoint callback to save the best model
-checkpoint_callback = ModelCheckpoint(model_path, save_best_only=True)
+# if the model file exists there is no need to train the model
+if os.path.exists(model_path):
+    print("No need to train model.")
+else:
+    print("Training model.")
+    # this call back helps us save the logs or model at a previous point
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=mylog_dir)
 
-# Train the model, and it will save the best model during training
-# history = model.fit(train, epochs=25, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
-history = model.fit(train, epochs=25, validation_data=val, callbacks=[tensorboard_callback, checkpoint_callback])
+    # Define a checkpoint callback to save the best model
+    checkpoint_callback = ModelCheckpoint(model_path, save_best_only=True)
 
-# This is used to evaluate the model
-precision = Precision()
-recall = Recall()
-accuracy = SparseCategoricalAccuracy()
+    # Train the model, and it will save the best model during training
+    # history = model.fit(train, epochs=25, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
+    history = model.fit(train, epochs=25, validation_data=val, callbacks=[tensorboard_callback, checkpoint_callback])
 
-for batch in test.as_numpy_iterator():
-    x, y = batch
-    yhat = model.predict(x)
-    precision.update_state(y, yhat)
-    recall.update_state(y, yhat)
-    accuracy.update_state(y, yhat)
 
-print(f'Precision:{precision.result().numpy()}, Recall:{recall.numpy()}, Accuracy:{accuracy.result().numpy()}')
+predictions = model.predict(test)
+print(predictions)
+class_labels = ["Class A", "Class B", "Class C", "Class D", "Class E", "Class F"]
+for i, prediction in enumerate(predictions):
+    predicted_class = class_labels[np.argmax(prediction)]
+    probability = max(prediction)
+    print(f"Data Point {i + 1}: Predicted Class - {predicted_class}, Probability - {probability:.2f}")
 
+# # This is used to evaluate the model
+# precision = Precision()
+# recall = Recall()
+# accuracy = SparseCategoricalAccuracy()
+#
+# for batch in test.as_numpy_iterator():
+#     x, y = batch
+#     yhat = model.predict(x)
+#     precision.update_state(y, yhat)
+#     recall.update_state(y, yhat)
+#     accuracy.update_state(y, yhat)
+#
+# print(f'Precision:{precision.result().numpy()}, Recall:{recall.numpy()}, Accuracy:{accuracy.result().numpy()}')
+#
