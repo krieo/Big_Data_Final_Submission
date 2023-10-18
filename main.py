@@ -12,8 +12,9 @@ from keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
 import tkinter as tk
-from tkinter import  filedialog
+from tkinter import filedialog
 from keras.metrics import Precision, Recall, SparseCategoricalAccuracy
+
 # Constants for batch processing
 batch_size = 50  # Change this as needed
 
@@ -130,7 +131,6 @@ print(num_images)
 # Calculate total number of images
 total_images = sum(num_images.values())
 
-
 # Create an ImageDataGenerator object
 datagen = ImageDataGenerator(
     rotation_range=20,
@@ -189,13 +189,11 @@ print(num_images)
 # Calculate total number of images
 total_images = sum(num_images.values())
 
-
 # Calculate class weights
-class_weights = {i: total_images/num_images[class_name] for i, class_name in enumerate(num_images)}
+class_weights = {i: total_images / num_images[class_name] for i, class_name in enumerate(num_images)}
 # Print class weights
 for class_name, weight in zip(num_images.keys(), class_weights.values()):
     print(f"Class: {class_name}, Weight: {weight}")
-
 
 # this allows us to access the data from the pipeline
 # data_iterator = data.as_numpy_iterator()
@@ -212,15 +210,15 @@ for class_name, weight in zip(num_images.keys(), class_weights.values()):
 # print(scaled_batch.min())
 # print(scaled_batch.max())
 # this is a more efficient way to normalize the data as it does it when loaded in pipeline
-data = data.map(lambda x, y: (x/255, y))
+data = data.map(lambda x, y: (x / 255, y))
 # print(data.as_numpy_iterator().next()[0].min())
 
 # split the data in training and testing sets
 # the train and validation sets will be used during training
 print(len(data))
-train_size = int(len(data)*0.7)
-val_size = int(len(data)*0.2)
-test_size = int(len(data)*0.1) + 2
+train_size = int(len(data) * 0.7)
+val_size = int(len(data) * 0.2)
+test_size = int(len(data) * 0.1) + 2
 print("Sizes:")
 print(train_size)
 print(val_size)
@@ -279,7 +277,6 @@ if os.path.exists(model_path):
 else:
     print("Using the already created model.")
 
-
 # if the model file exists there is no need to train the model
 if os.path.exists(model_path):
     print("No need to train model.")
@@ -295,14 +292,18 @@ else:
     # history = model.fit(train, epochs=25, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
     history = model.fit(train, epochs=25, validation_data=val, callbacks=[tensorboard_callback, checkpoint_callback])
 
+test_loss, test_accuracy = model.evaluate(test)
+print(f'Test Loss: {test_loss:.4f}')
+print(f'Test Accuracy: {test_accuracy:.4f}')
 
-# predictions = model.predict(test)
-# print(predictions)
-# class_labels = ["Class A", "Class B", "Class C", "Class D", "Class E", "Class F"]
-# for i, prediction in enumerate(predictions):
-#     predicted_class = class_labels[np.argmax(prediction)]
-#     probability = max(prediction)
-#     print(f"Data Point {i + 1}: Predicted Class - {predicted_class}, Probability - {probability:.2f}")
+predictions = model.predict(test)
+print(predictions)
+
+class_labels = ["Class A", "Class B", "Class C", "Class D", "Class E", "Class F"]
+for i, prediction in enumerate(predictions):
+    predicted_class = class_labels[np.argmax(prediction)]
+    probability = max(prediction)
+    print(f"Data Point {i + 1}: Predicted Class - {predicted_class}, Probability - {probability:.2f}")
 
 # Create a root window (you can hide it)
 root = tk.Tk()
@@ -335,9 +336,6 @@ if file_path:
         print("Failed to load the image.")
 else:
     print("No file selected.")
-
-
-
 
 # # This is used to evaluate the model
 # precision = Precision()
