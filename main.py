@@ -1,4 +1,8 @@
 import os
+
+import cv2
+import matplotlib.pyplot as plt
+
 import fileHandler
 from loadImage import *
 import tensorflow as tf
@@ -7,6 +11,8 @@ from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
+import tkinter as tk
+from tkinter import  filedialog
 from keras.metrics import Precision, Recall, SparseCategoricalAccuracy
 # Constants for batch processing
 batch_size = 50  # Change this as needed
@@ -290,13 +296,48 @@ else:
     history = model.fit(train, epochs=25, validation_data=val, callbacks=[tensorboard_callback, checkpoint_callback])
 
 
-predictions = model.predict(test)
-print(predictions)
-class_labels = ["Class A", "Class B", "Class C", "Class D", "Class E", "Class F"]
-for i, prediction in enumerate(predictions):
-    predicted_class = class_labels[np.argmax(prediction)]
-    probability = max(prediction)
-    print(f"Data Point {i + 1}: Predicted Class - {predicted_class}, Probability - {probability:.2f}")
+# predictions = model.predict(test)
+# print(predictions)
+# class_labels = ["Class A", "Class B", "Class C", "Class D", "Class E", "Class F"]
+# for i, prediction in enumerate(predictions):
+#     predicted_class = class_labels[np.argmax(prediction)]
+#     probability = max(prediction)
+#     print(f"Data Point {i + 1}: Predicted Class - {predicted_class}, Probability - {probability:.2f}")
+
+# Create a root window (you can hide it)
+root = tk.Tk()
+root.withdraw()
+
+# Use the file dialog to choose an image file
+file_path = filedialog.askopenfilename(title="Select an image file", filetypes=[("Image files", "*.jpg *.png *.jpeg")])
+
+if file_path:
+    # Load the selected image
+    img = cv2.imread(file_path)
+
+    # Check if the image was loaded successfully
+    if img is not None:
+        resized_image = cv2.resize(img, (256, 256))
+        plt.imshow(cv2.cvtColor(resized_image, cv2.COLOR_BGR2RGB))
+        plt.show()
+        np.expand_dims(resized_image, 0)
+        yhat = model.predict(np.expand_dims(resized_image / 255, 0))
+        for probability in yhat[0]:
+            probability_percentage = probability * 100
+            print(f"{probability_percentage:.2f}%")
+        predicted_class = np.argmax(yhat)
+
+        class_names = ["Aegypti", "Albopictus", "Anopheles", "Culex", "Culiseta", "japonicus_koreicus"]
+        print(predicted_class)
+        print(f"Predicted Class: {class_names[predicted_class]}")
+
+    else:
+        print("Failed to load the image.")
+else:
+    print("No file selected.")
+
+
+
 
 # # This is used to evaluate the model
 # precision = Precision()
