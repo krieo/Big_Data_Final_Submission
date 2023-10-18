@@ -7,6 +7,7 @@ from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
+from keras.metrics import Precision, Recall, SparseCategoricalAccuracy
 # Constants for batch processing
 batch_size = 50  # Change this as needed
 
@@ -281,3 +282,18 @@ checkpoint_callback = ModelCheckpoint(model_path, save_best_only=True)
 # Train the model, and it will save the best model during training
 # history = model.fit(train, epochs=25, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
 history = model.fit(train, epochs=25, validation_data=val, callbacks=[tensorboard_callback, checkpoint_callback])
+
+# This is used to evaluate the model
+precision = Precision()
+recall = Recall()
+accuracy = SparseCategoricalAccuracy()
+
+for batch in test.as_numpy_iterator():
+    x, y = batch
+    yhat = model.predict(x)
+    precision.update_state(y, yhat)
+    recall.update_state(y, yhat)
+    accuracy.update_state(y, yhat)
+
+print(f'Precision:{precision.result().numpy()}, Recall:{recall.numpy()}, Accuracy:{accuracy.result().numpy()}')
+
