@@ -237,10 +237,10 @@ model = Sequential()
 model.add(Conv2D(16, (3, 3), activation='relu', input_shape=(256, 256, 3)))
 model.add(MaxPooling2D())
 model.add(Dropout(0.05))  # Dropout layer
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(128, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
 model.add(Dropout(0.5))  # Dropout layer
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(256, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
 model.add(Conv2D(128, (3, 3), activation='relu'))
 model.add(MaxPooling2D())
@@ -290,7 +290,7 @@ else:
 
     # Train the model, and it will save the best model during training
     # history = model.fit(train, epochs=25, validation_data=val, class_weight=class_weights, callbacks=[tensorboard_callback, checkpoint_callback])
-    history = model.fit(train, epochs=25, validation_data=val, callbacks=[tensorboard_callback, checkpoint_callback])
+    history = model.fit(train, epochs=30, validation_data=val, callbacks=[tensorboard_callback, checkpoint_callback])
 
 test_loss, test_accuracy = model.evaluate(test)
 print(f'Test Loss: {test_loss:.4f}')
