@@ -16,7 +16,7 @@ from tkinter import filedialog
 from keras.metrics import Precision, Recall, SparseCategoricalAccuracy
 
 # Constants for batch processing
-batch_size = 50  # Change this as needed
+batch_size = 50  # This allows me to choose the size of the batch
 
 # These are the variables to count how many instances there are
 class_counts = {
@@ -92,18 +92,18 @@ if boolPerformImageProcessing == True:
                     if not os.path.exists(directory):
                         os.makedirs(directory)
 
-                    # Save the image to the directory
+                    # This saves the image to the directory
                     cv2.imwrite(f"{directory}/{image_data.img_fName}", processed_image)
-                    # Free up memory by deleting the processed image
+                    # This frees up memory by deleting the processed image
                     del processed_image
-                    # Delete the reference to ImageData object
+                    # This deletes the reference to ImageData object
                     del image_data
 
         except Exception as e:
             print(f"An error occurred while processing image {i}: {e}")
 
         if (i + 1) % batch_size == 0:
-            # Processed one batch, you can perform batch-specific operations here if needed
+            # Processed one batch
             print(f"Processed batch {i // batch_size + 1} - Total images processed: {total_images_processed}")
 
     # Print class counts
@@ -154,7 +154,7 @@ for class_name in classes:
         x = tf.keras.preprocessing.image.img_to_array(img)
         # Reshape the array to (1, height, width, channels)
         x = x.reshape((1,) + x.shape)
-        # The .flow() command generates batches of randomly transformed images and saves them to the `preview/` directory
+        # The .flow() command generates batches of randomly transformed images and saves them to the directory
         i = 0
         if num_images[class_name] < 50:
             num_aug_images = 30
@@ -256,16 +256,14 @@ model.add(Dropout(0.5))  # Dropout layer
 model.add(Dense(6, activation='softmax'))
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 print(model.summary())
-# # train the model
 mylog_dir = 'logs'
-# Define the folder where you want to save your models
 model_folder = "models"
 
-# Ensure the folder exists, or create it if it doesn't
+# This checks if the folder exists, or create it if it doesn't
 if not os.path.exists(model_folder):
     os.makedirs(model_folder)
 
-# Define the model file path within the "models" folder
+# This defines the model file path within the models folder
 model_filename = "my_model.h5"
 model_path = os.path.join(model_folder, model_filename)
 
@@ -299,7 +297,7 @@ print(f'Test Accuracy: {test_accuracy:.4f}')
 predictions = model.predict(test)
 print(predictions)
 
-class_labels = ["Class A", "Class B", "Class C", "Class D", "Class E", "Class F"]
+class_labels = ["Aegypti", "Albopictus", "Anopheles", "Culex", "Culiseta", "Japonicus_Korecius"]
 for i, prediction in enumerate(predictions):
     predicted_class = class_labels[np.argmax(prediction)]
     probability = max(prediction)
